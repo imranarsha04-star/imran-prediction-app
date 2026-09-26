@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'data_model.dart'; // Database model file ko import kiya
 
 void main() {
   runApp(const ImranPredictionApp());
@@ -25,7 +26,7 @@ class PredictionHomeScreen extends StatefulWidget {
   const PredictionHomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<PredictionHomeScreen> createState() => _PredictionHomeScreenState();
+  State<PredictionHomeScreen> createState() => '_PredictionHomeScreenState();
 }
 
 class _PredictionHomeScreenState extends State<PredictionHomeScreen> {
@@ -42,10 +43,9 @@ class _PredictionHomeScreenState extends State<PredictionHomeScreen> {
     'Main Bazar'
   ];
 
-  // Market schedule status checker (Mock logic for demonstration)
   bool isMarketOff(String market) {
     DateTime now = DateTime.now();
-    // Example: Weekend off rule for specific markets
+    // Sunday off rule for specific markets
     if ((market == 'Kalyan Night' || market == 'Main Bazar') && 
         now.weekday == DateTime.sunday) {
       return true;
@@ -56,6 +56,8 @@ class _PredictionHomeScreenState extends State<PredictionHomeScreen> {
   @override
   Widget build(BuildContext context) {
     bool marketOff = isMarketOff(selectedMarket);
+    // Fetching dynamic analysis based on 1972-2026 database engine
+    List<String> predictedJodis = HistoricalDatabase.getPredictedJodi(selectedMarket);
 
     return Scaffold(
       appBar: AppBar(
@@ -109,7 +111,9 @@ class _PredictionHomeScreenState extends State<PredictionHomeScreen> {
                 ),
               ),
               onPressed: () {
-                // Trigger advanced analysis calculation here
+                setState(() {
+                  // Triggers re-calculation from historical patterns
+                });
               },
               child: const Text(
                 'RUN ADVANCED ANALYSIS',
@@ -161,10 +165,10 @@ class _PredictionHomeScreenState extends State<PredictionHomeScreen> {
                   ),
                   const SizedBox(height: 6),
                   Row(
-                    children: const [
-                      JodiBadge(number: '56', color: Colors.redAccent),
-                      SizedBox(width: 8),
-                      JodiBadge(number: '91', color: Colors.redAccent),
+                    children: [
+                      JodiBadge(number: predictedJodis[0], color: Colors.redAccent),
+                      const SizedBox(width: 8),
+                      JodiBadge(number: predictedJodis[1], color: Colors.redAccent),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -174,10 +178,10 @@ class _PredictionHomeScreenState extends State<PredictionHomeScreen> {
                   ),
                   const SizedBox(height: 6),
                   Row(
-                    children: const [
-                      JodiBadge(number: '68', color: Colors.redAccent),
-                      SizedBox(width: 8),
-                      JodiBadge(number: '17', color: Colors.redAccent),
+                    children: [
+                      JodiBadge(number: predictedJodis[2], color: Colors.redAccent),
+                      const SizedBox(width: 8),
+                      JodiBadge(number: predictedJodis[3], color: Colors.redAccent),
                     ],
                   ),
                   const SizedBox(height: 12),
